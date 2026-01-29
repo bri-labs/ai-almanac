@@ -1,0 +1,1 @@
+print("Hello running script inside docker")
