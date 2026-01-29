@@ -1,0 +1,29 @@
+services:
+  # First service - flask app
+  web:
+    image: python:3.12
+    container_name: flask-app
+    working_dir: /app # working directory in container
+    volumes: 
+    - .:/app  # Access local directory in /app dir in container
+    ports:
+    - "8000:5000"
+    command: sh -c "pip install -r requirements.txt && python app.py"
+    depends_on:   # Ensures "db" service started before web service started
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:  # Environment variabls
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:  # Where contatiner stores data
+      - db_data:/var/lib/mysql
+
+volumes:  # Mount local directory, so if container stopped, persistent data stays
+  db_data:
